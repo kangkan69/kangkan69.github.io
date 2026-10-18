@@ -1,0 +1,2 @@
+Add your own photos to this folder and name them photo1.jpg, photo2.jpg, and photo3.jpg.
+The website shows cute placeholders until you add photos.
