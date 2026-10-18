@@ -19,26 +19,62 @@
   body { 
     margin:0; 
     color:var(--ink); 
-    background:linear-gradient(180deg,#ffeaf2 0%,#fff5f8 50%,#ffeaf2 100%); 
+    background:linear-gradient(180deg,#fff0f5 0%,#fffaf5 50%,#ffe8f1 100%); 
     font-family: "Trebuchet MS", "Segoe UI", sans-serif; 
     overflow-x:hidden; 
     position:relative;
   }
   button { font:inherit; cursor:pointer; }
 
+  /* VINTAGE FILM GRAIN TEXTURE OVERLAY */
+  .film-grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0.032;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
   /* Floating hearts background overlay */
   .hearts { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:2; }
   .heart { position:absolute; bottom:-50px; color:#f08bb0; opacity:.55; animation:floatUp linear forwards; }
   @keyframes floatUp { to { transform:translateY(-115vh) rotate(25deg); opacity:0; } }
 
-  /* CONTINUOUS MOVING PHOTO CHAINS IN BACKGROUND */
+  /* FLOATING MUSIC CONTROL BUTTON */
+  .music-control {
+    position: fixed;
+    top: 18px;
+    right: 20px;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    border-radius: 999px;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(184, 63, 112, 0.2);
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #b83f70;
+  }
+  .music-control:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.92);
+  }
+
+  /* CONTINUOUS MOVING PHOTO CHAINS WITH AESTHETIC GLOW & FILTERS */
   .bg-photo-strip-container {
     position: fixed;
     width: 100vw;
-    pointer-events: none;
     z-index: 0;
-    opacity: 0.88; /* High visibility */
-    filter: saturate(1.05) contrast(1.02);
+    opacity: 0.85;
+    filter: saturate(1.12) contrast(1.05) brightness(1.02);
     overflow: hidden;
     display: flex;
     user-select: none;
@@ -46,77 +82,95 @@
     -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
   }
 
-  /* Top Chain: Scrolls Left */
+  /* Top Chain: Scrolls Left to Right + Gentle Sway */
   .bg-photo-strip-container.top-strip {
     top: 22%;
     transform: translateY(-50%) rotate(-3.5deg);
+    animation: swaySlow 8s ease-in-out infinite alternate;
   }
 
-  /* Bottom Chain: Scrolls Right */
+  /* Bottom Chain: Scrolls Right to Left + Gentle Sway Alternate */
   .bg-photo-strip-container.bottom-strip {
     top: 72%;
     transform: translateY(-50%) rotate(3.5deg);
+    animation: swaySlowAlt 9s ease-in-out infinite alternate;
+  }
+
+  @keyframes swaySlow {
+    0% { transform: translateY(-50%) rotate(-3.5deg) scale(1); }
+    100% { transform: translateY(-54%) rotate(-3deg) scale(1.02); }
+  }
+
+  @keyframes swaySlowAlt {
+    0% { transform: translateY(-50%) rotate(3.5deg) scale(1); }
+    100% { transform: translateY(-46%) rotate(4deg) scale(1.02); }
   }
 
   .bg-photo-track {
     display: flex;
-    gap: 28px;
+    gap: 26px;
     width: max-content;
     will-change: transform;
-    padding: 20px 0;
+    padding: 24px 0;
   }
 
-  /* Scroll Left Animation */
-  .scroll-left {
-    animation: infiniteScrollLeft 34s linear infinite;
+  /* Scroll Left to Right Animation (Top Track) */
+  .scroll-left-to-right {
+    animation: infiniteScrollLR 36s linear infinite;
   }
 
-  @keyframes infiniteScrollLeft {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-
-  /* Scroll Right Animation */
-  .scroll-right {
-    animation: infiniteScrollRight 34s linear infinite;
-  }
-
-  @keyframes infiniteScrollRight {
+  @keyframes infiniteScrollLR {
     0% { transform: translateX(-50%); }
     100% { transform: translateX(0); }
   }
 
-  /* LARGE POLAROID CARD UNITS */
-  .bg-polaroid {
-    width: 260px;
-    height: 330px;
-    background: #ffffff;
-    padding: 14px 14px 36px 14px;
+  /* Scroll Right to Left Animation (Bottom Track) */
+  .scroll-right-to-left {
+    animation: infiniteScrollRL 36s linear infinite;
+  }
+
+  @keyframes infiniteScrollRL {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* BORDERLESS CLEAN PHOTO UNITS WITH DREAMY GLOW & HOVER EFFECTS */
+  .bg-photo-card {
+    width: 240px;
+    height: 300px;
     border-radius: 18px;
-    box-shadow: 0 16px 36px rgba(184, 63, 112, 0.22);
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(184, 63, 112, 0.18), 0 0 20px rgba(255, 182, 193, 0.3);
     flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 2px solid #ffdae7;
-    transform: rotate(calc(var(--rand-rot, 0) * 1deg));
+    background: #ffe0eb;
     position: relative;
-    transition: transform 0.3s;
+    pointer-events: auto;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, filter 0.4s ease;
   }
 
-  .bg-polaroid img {
+  .bg-photo-card:hover {
+    transform: translateY(-8px) scale(1.06);
+    box-shadow: 0 22px 48px rgba(217, 79, 131, 0.45), 0 0 30px rgba(255, 150, 180, 0.6);
+    filter: brightness(1.08) saturate(1.2);
+    z-index: 10;
+  }
+
+  .bg-photo-card img {
     width: 100%;
-    height: 235px;
+    height: 100%;
     object-fit: cover;
-    border-radius: 10px;
+    object-position: center;
     display: block;
+    transition: transform 0.5s ease;
   }
 
-  .bg-polaroid .bg-placeholder {
+  .bg-photo-card:hover img {
+    transform: scale(1.05);
+  }
+
+  .bg-photo-card .bg-placeholder {
     width: 100%;
-    height: 235px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #ffe0eb, #fff0f5);
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -124,16 +178,8 @@
     color: #b83f70;
     font-size: 0.85rem;
     text-align: center;
-    padding: 8px;
-  }
-
-  .bg-polaroid span {
-    font-size: 0.9rem;
-    color: #a85878;
-    margin-top: 10px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    font-family: Georgia, serif;
+    padding: 12px;
+    background: linear-gradient(135deg, #ffe0eb, #fff0f5);
   }
 
   /* MAIN CONTENT WRAPPER */
@@ -142,98 +188,251 @@
   .tiny { color:#c45d83; letter-spacing:.12em; text-transform:uppercase; font-size:.75rem; font-weight:800; }
   .hero { min-height:83vh; display:grid; place-items:center; text-align:center; padding:32px 0 56px; }
   
-  /* FROSTED GLASS CARDS WITH ENHANCED CONTRAST FOR OPTIMAL LEGIBILITY */
+  /* PREMIUM AESTHETIC CARDS */
   .card { 
     width:min(680px,100%); 
     padding:clamp(24px,6vw,54px); 
-    background: rgba(255, 255, 255, 0.93); 
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    border:1.5px solid rgba(255, 212, 226, 0.9); 
+    background: rgba(255, 255, 255, 0.88); 
+    border: 1.5px solid rgba(255, 225, 235, 0.9); 
     border-radius:32px; 
-    box-shadow:0 24px 80px rgba(184, 63, 112, 0.22); 
+    box-shadow: 0 24px 70px rgba(184, 63, 112, 0.16); 
     position:relative; 
+    animation: fadeInCard 0.8s ease-out both;
   }
-  
-  .badge { display:inline-block; background:#fff0f5; color:#b84b76; border:1px solid #ffd4e2; border-radius:999px; padding:8px 14px; font-size:.88rem; }
-  h1 { font-family:Georgia,serif; font-weight:500; font-size:clamp(2.5rem,8vw,5rem); line-height:1.04; margin:20px 0 16px; color:#b63d70; }
-  h2 { font-family:Georgia,serif; font-size:clamp(1.8rem,5vw,3rem); font-weight:500; color:#b63d70; margin:10px 0 16px; }
-  p { line-height:1.75; }
-  .lead { font-size:clamp(1rem,2.7vw,1.2rem); max-width:490px; margin:0 auto 24px; font-weight: 500; }
-  .btn { border:0; border-radius:999px; padding:14px 24px; font-weight:800; box-shadow:0 8px 20px #b83f7020; transition:transform .18s, box-shadow .18s; }
-  .btn:hover { transform:translateY(-2px); box-shadow:0 12px 24px #b83f7030; }
-  .primary { background:#d94f83; color:white; }
-  .secondary { background:#fff0f5; color:#ad3e6d; border:1px solid #f5c4d6; }
-  .scroll-hint { display:block; margin-top:22px; color:#a96a83; font-size:.9rem; }
-  section { padding:48px 0; }
-  .section-head { text-align:center; margin-bottom:24px; }
-  
+
+  /* HERO CARD BACKGROUND PHOTO STYLING */
+  .hero .card {
+    background: linear-gradient(rgba(255, 245, 248, 0.35), rgba(255, 240, 245, 0.35)), url('photos/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 28px 80px rgba(184, 63, 112, 0.28);
+  }
+
+  .hero .card h1, 
+  .hero .card p, 
+  .hero .card .scroll-hint {
+    text-shadow: 0 2px 12px rgba(255, 255, 255, 0.95), 0 0 25px rgba(255, 255, 255, 0.95);
+  }
+
+  /* NOTE CARD BACKGROUND PHOTO STYLING */
   .note { 
     max-width:700px; 
     margin:auto; 
-    background: rgba(255, 255, 255, 0.95); 
-    backdrop-filter: blur(14px) saturate(140%);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
-    border:1.5px solid #ffd8e5; 
+    background: linear-gradient(rgba(255, 245, 248, 0.35), rgba(255, 240, 245, 0.35)), url('photos/note-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    border: 2px solid rgba(255, 255, 255, 0.85); 
     border-radius:26px; 
     padding:clamp(22px,5vw,38px); 
-    box-shadow:0 16px 48px rgba(184, 63, 112, 0.18); 
+    box-shadow: 0 20px 60px rgba(184, 63, 112, 0.22); 
   }
-  .note p { margin:0 0 12px; font-size: 1.02rem; }
+
+  .note p { 
+    margin:0 0 12px; 
+    font-size: 1.05rem; 
+    font-weight: 600;
+    text-shadow: 0 2px 12px rgba(255, 255, 255, 0.95), 0 0 25px rgba(255, 255, 255, 0.95);
+  }
+
+  /* PROPOSAL CARD - ZERO BLUR, 100% CLEAR BACKGROUND PHOTO WITH CRYSTAL GLASS OUTLINES */
+  .proposal .card {
+    background: url('photos/proposal-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+  }
+
+  /* ULTRA-CLEAR GLASS CAPSULES (NO BLUR SO FACES ARE COMPLETELY SHARP & VISIBLE) */
+  .proposal .card .glass-text {
+    display: inline-block;
+    padding: 12px 26px;
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-radius: 24px;
+    border: 1.5px solid rgba(255, 255, 255, 0.65);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.3);
+    margin: 8px 0;
+  }
+
+  .proposal .card h2.glass-text {
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    color: #ffffff;
+    font-weight: 700;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8), 0 0 20px rgba(184, 63, 112, 0.8);
+  }
+
+  .proposal .card p.glass-text {
+    font-size: clamp(1rem, 2.7vw, 1.25rem);
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8), 0 0 14px rgba(0, 0, 0, 0.6);
+  }
+
+  /* CLEAR GLASS HINT BADGE */
+  .proposal .card .small-note {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 10px 22px;
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-radius: 999px;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 0.9rem;
+    border: 1.5px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8) !important;
+  }
+
+  @keyframes fadeInCard {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
   
-  /* GALLERY GRID */
-  .gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
-  .photo { aspect-ratio:4/5; overflow:hidden; border-radius:20px; background:linear-gradient(145deg,#ffe0eb,#fff5f8); border:7px solid white; box-shadow:0 12px 30px #b83f7024; transform:rotate(-1.5deg); position: relative; }
+  .badge { display:inline-block; background:rgba(255, 255, 255, 0.2); color:#ffffff; border:1.5px solid rgba(255,255,255,0.7); border-radius:999px; padding:8px 18px; font-size:.88rem; box-shadow: 0 4px 16px rgba(0,0,0,0.25); font-weight:800; text-shadow:0 2px 8px rgba(0,0,0,0.7); }
+  h1 { font-family:Georgia,serif; font-weight:500; font-size:clamp(2.5rem,8vw,5rem); line-height:1.04; margin:20px 0 16px; color:#b63d70; }
+  h2 { font-family:Georgia,serif; font-size:clamp(1.8rem,5vw,3rem); font-weight:500; color:#b63d70; margin:10px 0 16px; }
+  p { line-height:1.75; }
+  .lead { font-size:clamp(1rem,2.7vw,1.2rem); max-width:490px; margin:0 auto 24px; font-weight: 600; }
+  
+  .btn { 
+    border:0; 
+    border-radius:999px; 
+    padding:14px 24px; 
+    font-weight:800; 
+    box-shadow:0 8px 20px #b83f7020; 
+    transition:transform .2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow .2s ease; 
+  }
+  .btn:hover { transform:translateY(-3px) scale(1.03); box-shadow:0 14px 28px #b83f7035; }
+  .primary { background:#d94f83; color:white; }
+  .secondary { background:rgba(255, 255, 255, 0.85); color:#ad3e6d; border:1px solid #f5c4d6; }
+  .scroll-hint { display:block; margin-top:22px; color:#8c2b53; font-size:.9rem; font-weight:700; }
+  section { padding:48px 0; }
+  .section-head { text-align:center; margin-bottom:28px; position:relative; z-index:2; }
+  .section-head h2 { text-shadow: 0 2px 10px rgba(255, 255, 255, 0.9); }
+  
+  /* CUTE LIVE ROMANTIC BORDERS & MAGICAL HOVER BURST FOR MEMORY CORNER GALLERY */
+  .gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .photo { 
+    aspect-ratio:4/5; 
+    overflow:visible; 
+    border-radius:24px; 
+    background: linear-gradient(135deg, #fff0f5, #ffe4ed); 
+    border: 4px solid #ffb6c1; 
+    box-shadow: 0 12px 35px rgba(184, 63, 112, 0.22), 0 0 15px rgba(255, 182, 193, 0.5); 
+    transform:rotate(-1.5deg); 
+    position: relative; 
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+  }
+  
+  .photo-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    background: #fff;
+  }
+
+  .photo:hover { 
+    transform: translateY(-12px) scale(1.05) rotate(0deg); 
+    border-color: #d94f83; 
+    box-shadow: 0 25px 60px rgba(217, 79, 131, 0.45), 0 0 35px rgba(255, 140, 175, 0.8); 
+    z-index: 10; 
+  }
+
   .photo:nth-child(2) { transform:rotate(2deg) translateY(6px); }
   .photo:nth-child(3) { transform:rotate(-1deg); }
   .photo:nth-child(4) { transform:rotate(1.5deg); }
   .photo:nth-child(5) { transform:rotate(-2deg) translateY(4px); }
   .photo:nth-child(6) { transform:rotate(1deg); }
   
-  .photo img { width:100%; height:100%; object-fit:cover; display:block; }
+  .photo img { width:100%; height:100%; object-fit:cover; object-position:center; display:block; transition: transform 0.5s ease; }
+  .photo:hover img { transform: scale(1.08); }
+  
   .photo-placeholder { height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:12px; color:#b6537b; background:#fff0f5; }
   .photo-placeholder span { font-size:2rem; }
   .photo-placeholder small { margin-top:8px; line-height:1.4; }
+
+  /* MAGICAL SPARKLES / HEARTS BURSTING BEHIND PHOTO ON HOVER */
+  .photo::before, .photo::after {
+    content: '✨';
+    position: absolute;
+    font-size: 1.4rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: -1;
+  }
+  .photo::before { top: -10px; left: -10px; }
+  .photo::after { bottom: -10px; right: -10px; content: '💖'; }
+
+  .photo:hover::before {
+    top: -30px;
+    left: -20px;
+    opacity: 1;
+    transform: scale(1.2) rotate(-15deg);
+  }
+  .photo:hover::after {
+    bottom: -30px;
+    right: -20px;
+    opacity: 1;
+    transform: scale(1.2) rotate(15deg);
+  }
   
   .proposal { text-align:center; }
-  .button-zone { display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap; min-height:80px; position:relative; }
-  #noBtn { position:relative; }
-  .success { display:none; margin:26px auto 0; max-width:540px; background:#fff0f5; border:1px solid #ffc9dc; padding:24px; border-radius:24px; animation:pop .45s ease both; }
-  .success.show { display:block; }
-  @keyframes pop { from { opacity:0; transform:scale(.88); } to { opacity:1; transform:scale(1); } }
+  .button-zone { display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap; min-height:80px; position:relative; margin-top:14px; }
+  #noBtn { position:relative; transition: left 0.15s ease-out, top 0.15s ease-out; }
   footer { text-align:center; padding:24px 0 46px; color:#a96a83; font-size:.9rem; }
   .small-note { color:#9b6a7e; font-size:.85rem; }
   
   @media(max-width:768px) {
     .gallery { grid-template-columns: repeat(2, 1fr); }
-    .bg-polaroid { width: 200px; height: 260px; padding: 10px 10px 26px 10px; }
-    .bg-polaroid img, .bg-polaroid .bg-placeholder { height: 180px; }
-    .bg-polaroid span { font-size: 0.78rem; margin-top: 6px; }
+    .bg-photo-card { width: 180px; height: 230px; }
   }
   @media(max-width:600px) {
     .card { border-radius:25px; }
     .button-zone { gap:10px; }
     .btn { padding:13px 19px; }
-    .bg-polaroid { width: 160px; height: 215px; padding: 8px 8px 20px 8px; }
-    .bg-polaroid img, .bg-polaroid .bg-placeholder { height: 145px; }
-    .bg-polaroid span { font-size: 0.7rem; margin-top: 4px; }
+    .bg-photo-card { width: 140px; height: 180px; }
   }
   @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; scroll-behavior:auto!important; transition-duration:.01ms!important; } }
 </style>
 </head>
 <body>
 
-<!-- TOP BACKGROUND INFINITE MOVING PHOTO CHAIN (SCROLLS LEFT) -->
+<div class="film-grain" aria-hidden="true"></div>
+
+<!-- BACKGROUND AUDIO PLAYER (CONTINUOUS LOOP) -->
+<audio id="bgMusic" loop preload="auto">
+  <source src="photos/music.mp3" type="audio/mpeg">
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- FLOATING MUSIC TOGGLE BUTTON -->
+<button class="music-control" id="musicToggle" aria-label="Toggle Background Music">
+  <span id="musicIcon">🎵</span>
+  <span id="musicText">Music On</span>
+</button>
+
+<!-- TOP BACKGROUND INFINITE MOVING PHOTO CHAIN (SCROLLS LEFT TO RIGHT) -->
 <div class="bg-photo-strip-container top-strip" aria-hidden="true">
-  <div class="bg-photo-track scroll-left" id="bgPhotoTrackTop">
-    <!-- photo1.jpg through photo6.jpg -->
+  <div class="bg-photo-track scroll-left-to-right" id="bgPhotoTrackTop">
+    <!-- photos 1-6 -->
   </div>
 </div>
 
-<!-- BOTTOM BACKGROUND INFINITE MOVING PHOTO CHAIN (SCROLLS RIGHT) -->
+<!-- BOTTOM BACKGROUND INFINITE MOVING PHOTO CHAIN (SCROLLS RIGHT TO LEFT) -->
 <div class="bg-photo-strip-container bottom-strip" aria-hidden="true">
-  <div class="bg-photo-track scroll-right" id="bgPhotoTrackBottom">
-    <!-- photo7.jpg through photo12.jpg -->
+  <div class="bg-photo-track scroll-right-to-left" id="bgPhotoTrackBottom">
+    <!-- photos 7-12 -->
   </div>
 </div>
 
@@ -246,7 +445,7 @@
       <span class="badge">💌 just for you, Kiku</span>
       <h1>Hi, Kiku<span aria-hidden="true"> ♡</span></h1>
       <p class="lead">I made a little something for you. It might be a tiny bit cheesy… but it's 100% from my heart.</p>
-      <button class="btn primary" onclick="document.querySelector('#letter').scrollIntoView({behavior:'smooth'})">Open your little surprise ✨</button>
+      <button class="btn primary" onclick="startMusic(); document.querySelector('#letter').scrollIntoView({behavior:'smooth'})">Open your little surprise ✨</button>
       <span class="scroll-hint">made with butterflies in my stomach 🦋</span>
     </div>
   </section>
@@ -266,7 +465,7 @@
     <div class="section-head">
       <span class="tiny">little moments, big smiles</span>
       <h2>Our little memory corner 📸</h2>
-      <p class="small-note">Photos from your <b>photos/</b> folder (photo1.jpg through photo12.jpg) load automatically in the gallery and moving chains.</p>
+      <p class="small-note">Photos from your <b>photos/</b> folder (imp1.jpg through imp6.jpg) load automatically here with magical hover effects.</p>
     </div>
     
     <div class="gallery" id="galleryGrid">
@@ -276,21 +475,17 @@
 
   <section class="proposal" id="question">
     <div class="card">
-      <div style="font-size:2.4rem">💗 🦋 💗</div>
-      <span class="tiny">okay, deep breath…</span>
-      <h2>Kiku, will you be my girlfriend?</h2>
-      <p>I'd really love to make more lovely memories with you. 💕</p>
+      <div style="font-size:2.4rem; margin-bottom: 6px;">💗 🦋 💗</div>
+      <div><span class="badge">okay, deep breath…</span></div>
+      <div><h2 class="glass-text">Kiku, will you be my girlfriend?</h2></div>
+      <div><p class="glass-text">I'd really love to make more lovely memories with you. 💕</p></div>
       <div class="button-zone" id="buttonZone">
         <button class="btn primary" id="yesBtn">YES! 💖</button>
         <button class="btn secondary" id="noBtn" aria-label="No">No 🙈</button>
       </div>
-      <div class="success" id="success" role="status" aria-live="polite">
-        <div style="font-size:2.6rem">🥹💐💗</div>
-        <h2 style="font-size:2rem">YOU JUST MADE ME SO HAPPY!</h2>
-        <p>Kiku, this is the beginning of a very cute story. Sending you the biggest virtual hug. 💞</p>
-        <p>Screenshot this moment if you want — it's a special one! ♡</p>
+      <div>
+        <p class="small-note" id="hint">Psst… one of these buttons is a little shy 👀</p>
       </div>
-      <p class="small-note" id="hint">Psst… one of these buttons is a little shy 👀</p>
     </div>
   </section>
 </main>
@@ -298,37 +493,84 @@
 <footer class="wrap">made with ♡, just for Kiku · <a href="#top" style="color:#b63d70">back to top ↑</a></footer>
 
 <script>
-  // Configuration for 12 photos in photos/ folder with distinct fallbacks
-  const photoConfig = [
-    // Top Strip (1-6) & Gallery
-    { file: 'photos/photo1.jpg', label: 'Sweet Moments 🌸', fallback: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80' },
-    { file: 'photos/photo2.jpg', label: 'Together ♡', fallback: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80' },
-    { file: 'photos/photo3.jpg', label: 'Warm Smiles ✨', fallback: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=80' },
-    { file: 'photos/photo4.jpg', label: 'Little Adventures 🌷', fallback: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80' },
-    { file: 'photos/photo5.jpg', label: 'Cute Laughs 🧸', fallback: 'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=600&q=80' },
-    { file: 'photos/photo6.jpg', label: 'Always You 💗', fallback: 'https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=600&q=80' },
-    
-    // Bottom Strip (7-12) & Gallery
-    { file: 'photos/photo7.jpg', label: 'Sunny Days ☀️', fallback: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80' },
-    { file: 'photos/photo8.jpg', label: 'Sweet Dreams 🌙', fallback: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80' },
-    { file: 'photos/photo9.jpg', label: 'Cozy Times ☕', fallback: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80' },
-    { file: 'photos/photo10.jpg', label: 'Pure Joy 💖', fallback: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80' },
-    { file: 'photos/photo11.jpg', label: 'Golden Hours 🌅', fallback: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=600&q=80' },
-    { file: 'photos/photo12.jpg', label: 'Best Memories 📸', fallback: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=600&q=80' }
+  // YOUR WHATSAPP NUMBER CONFIGURATION
+  const myWhatsAppNumber = "917636956878";
+
+  // AUDIO & MUSIC CONTROL LOGIC
+  const bgMusic = document.getElementById('bgMusic');
+  const musicToggle = document.getElementById('musicToggle');
+  const musicIcon = document.getElementById('musicIcon');
+  const musicText = document.getElementById('musicText');
+  let musicPlaying = false;
+
+  function startMusic() {
+    if (!musicPlaying) {
+      bgMusic.play().then(() => {
+        musicPlaying = true;
+        musicIcon.textContent = "🎵";
+        musicText.textContent = "Music On";
+      }).catch(e => console.log("Autoplay blocked, waiting for click interaction."));
+    }
+  }
+
+  musicToggle.addEventListener('click', () => {
+    if (bgMusic.paused) {
+      bgMusic.play();
+      musicPlaying = true;
+      musicIcon.textContent = "🎵";
+      musicText.textContent = "Music On";
+    } else {
+      bgMusic.pause();
+      musicPlaying = false;
+      musicIcon.textContent = "🔇";
+      musicText.textContent = "Muted";
+    }
+  });
+
+  // Start music automatically on any first touch or scroll interaction
+  window.addEventListener('click', startMusic, { once: true });
+  window.addEventListener('touchstart', startMusic, { once: true });
+
+  // Background chain configuration (photo1.jpg through photo12.jpg)
+  const bgPhotoConfig = [
+    { file: 'photos/photo1.jpg', fallback: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/photo2.jpg', fallback: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/photo3.jpg', fallback: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/photo4.jpg', fallback: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/photo5.jpg', fallback: 'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/photo6.jpg', fallback: 'https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/photo7.jpg', fallback: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/photo8.jpg', fallback: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/photo9.jpg', fallback: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/photo10.jpg', fallback: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/photo11.jpg', fallback: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/photo12.jpg', fallback: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=600&q=80' }
+  ];
+
+  // Memory Corner Gallery configuration (imp1.jpg through imp6.jpg)
+  const memoryGalleryConfig = [
+    { file: 'photos/imp1.jpg', fallback: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/imp2.jpg', fallback: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/imp3.jpg', fallback: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/imp4.jpg', fallback: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/imp5.jpg', fallback: 'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=600&q=80' },
+    { file: 'photos/imp6.jpg', fallback: 'https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=600&q=80' }
   ];
 
   function renderGallery() {
     const galleryGrid = document.getElementById('galleryGrid');
     galleryGrid.innerHTML = '';
 
-    // Render first 6 in main memory gallery section
-    photoConfig.slice(0, 6).forEach((item) => {
+    memoryGalleryConfig.forEach((item) => {
       const photoDiv = document.createElement('div');
       photoDiv.className = 'photo';
 
+      const innerDiv = document.createElement('div');
+      innerDiv.className = 'photo-inner';
+
       const img = document.createElement('img');
       img.src = item.file;
-      img.alt = item.label;
+      img.alt = 'Memory photo';
 
       const placeholder = document.createElement('div');
       placeholder.className = 'photo-placeholder';
@@ -344,23 +586,20 @@
         }
       };
 
-      photoDiv.appendChild(img);
-      photoDiv.appendChild(placeholder);
+      innerDiv.appendChild(img);
+      innerDiv.appendChild(placeholder);
+      photoDiv.appendChild(innerDiv);
       galleryGrid.appendChild(photoDiv);
     });
   }
 
   function createTrackItems(itemsSubset) {
     const fragment = document.createDocumentFragment();
-    // Duplicate subset to create continuous seamless marquee
     const fullList = [...itemsSubset, ...itemsSubset];
 
-    fullList.forEach((item, index) => {
-      const randRot = ((index % 5) - 2) * 2.5;
-
+    fullList.forEach((item) => {
       const card = document.createElement('div');
-      card.className = 'bg-polaroid';
-      card.style.setProperty('--rand-rot', randRot);
+      card.className = 'bg-photo-card';
 
       const img = document.createElement('img');
       img.src = item.file;
@@ -380,12 +619,8 @@
         }
       };
 
-      const caption = document.createElement('span');
-      caption.textContent = item.label;
-
       card.appendChild(img);
       card.appendChild(placeholder);
-      card.appendChild(caption);
       fragment.appendChild(card);
     });
 
@@ -393,15 +628,13 @@
   }
 
   function renderBackgroundTracks() {
-    // Top Track (photos 1 to 6)
     const topTrack = document.getElementById('bgPhotoTrackTop');
     topTrack.innerHTML = '';
-    topTrack.appendChild(createTrackItems(photoConfig.slice(0, 6)));
+    topTrack.appendChild(createTrackItems(bgPhotoConfig.slice(0, 6)));
 
-    // Bottom Track (photos 7 to 12)
     const bottomTrack = document.getElementById('bgPhotoTrackBottom');
     bottomTrack.innerHTML = '';
-    bottomTrack.appendChild(createTrackItems(photoConfig.slice(6, 12)));
+    bottomTrack.appendChild(createTrackItems(bgPhotoConfig.slice(6, 12)));
   }
 
   // Floating hearts logic
@@ -438,15 +671,16 @@
   noBtn.addEventListener('touchstart', function(e) { e.preventDefault(); dodgeNo(); }, {passive:false});
   noBtn.addEventListener('click', function(e) { e.preventDefault(); dodgeNo(); });
 
-  // YES action
+  // YES ACTION: HEART BURST & DIRECT WHATSAPP REDIRECT
   document.getElementById('yesBtn').addEventListener('click', () => {
-    document.getElementById('success').classList.add('show');
-    document.getElementById('hint').textContent = "Best. Answer. Ever. 💘";
-    document.getElementById('success').scrollIntoView({behavior:'smooth', block:'center'});
-    for (let i=0;i<30;i++) setTimeout(addHeart, i*90);
+    for (let i = 0; i < 40; i++) setTimeout(addHeart, i * 50);
+    const message = encodeURIComponent("Yes! 💖");
+    const whatsappUrl = `https://wa.me/${myWhatsAppNumber}?text=${message}`;
+    setTimeout(() => {
+      window.location.href = whatsappUrl;
+    }, 400);
   });
 
-  // Initial render
   renderGallery();
   renderBackgroundTracks();
 </script>
